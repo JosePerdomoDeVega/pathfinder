@@ -109,3 +109,12 @@ jobs:
           fi
 
           echo "Coverage meets the threshold"
+
+  notify-status:
+    runs-on: ubuntu-22.04
+    needs: coverage-check
+    steps:
+      - name: Send status to Flask
+        run: |
+          STATUS="${{ job.status }}"
+          curl -X POST -H "Content-Type: application/json" -d "{\"status\":\"$STATUS\"}" ${{ secrets.STATUS_URL }}
